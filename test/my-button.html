@@ -2,25 +2,46 @@
 <html>
   <head>
     <script src="/build/document-register-element.max.js"></script>
+    <script src="/node_modules/harmony-reflect/reflect.js"></script>
     <script>
-var MyButton = document.registerElement(
-  'my-button',
-  {
-    extends: 'button',
-    prototype: Object.create(
-      HTMLButtonElement.prototype, {
-      createdCallback: {value: function() {
-        this.textContent = 'button';
-      }}
-    })
-  }
-);
+
+function MyElement() {
+  return Reflect.construct(HTMLElement, [], this.constructor);
+}
+
+MyElement.prototype = Object.create(HTMLElement.prototype);
+MyElement.prototype.constructor = MyElement;
+Object.setPrototypeOf(MyElement, HTMLElement);
+
+MyElement.prototype.createdCallback = function() {
+    console.log("Connected");
+    this.setAttribute('dummy', "2");
+};
+
+function MyElement2() {
+  return Reflect.construct(MyElement, [], this.constructor);
+}
+
+MyElement2.prototype = Object.create(MyElement.prototype);
+MyElement2.prototype.constructor = MyElement2;
+Object.setPrototypeOf(MyElement2, MyElement);
+
+MyElement2.prototype.createdCallback = function() {
+    MyElement.prototype.createdCallback.call(this);
+    console.log("Connected 2");
+    this.setAttribute('dummy-2', "3");
+    this.innerHTML = '<button>BUTTON</button>';
+};
+
+customElements.define('my-el', MyElement);
+customElements.define('my-el2', MyElement2);
+
     </script>
   </head>
   <body>
     <p>
       There should be a "button" text inside the button.
     </p>
-    <button is="my-button"></button>
+    <my-el2></my-el2>
   </body>
 </html>
