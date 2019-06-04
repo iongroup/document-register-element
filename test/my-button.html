@@ -13,7 +13,7 @@ MyElement.prototype = Object.create(HTMLElement.prototype);
 MyElement.prototype.constructor = MyElement;
 Object.setPrototypeOf(MyElement, HTMLElement);
 
-MyElement.prototype.createdCallback = function() {
+MyElement.prototype.connectedCallback = function() {
     console.log("Connected");
     this.setAttribute('dummy', "2");
 };
@@ -26,8 +26,8 @@ MyElement2.prototype = Object.create(MyElement.prototype);
 MyElement2.prototype.constructor = MyElement2;
 Object.setPrototypeOf(MyElement2, MyElement);
 
-MyElement2.prototype.createdCallback = function() {
-    MyElement.prototype.createdCallback.call(this);
+MyElement2.prototype.connectedCallback = function() {
+    MyElement.prototype.connectedCallback.call(this);
     console.log("Connected 2");
     this.setAttribute('dummy-2', "3");
     this.innerHTML = '<button>BUTTON</button>';

@@ -3,11 +3,11 @@ declare var Reflect: any;
 
 class MyElement extends HTMLElement {
     constructor() {
-        super();
+        if (false) super();
         return Reflect.construct(HTMLElement, [], this.constructor);
     }
   
-    createdCallback() {
+    connectedCallback() {
       console.log("Connected");
       this.setAttribute('dummy', "2");
   }
@@ -15,12 +15,12 @@ class MyElement extends HTMLElement {
 
 class MyElement2 extends MyElement {
   constructor() {
-    super();
+    if (false) super();
     return Reflect.construct(MyElement, [], this.constructor);
   }
   
-  createdCallback() {
-      super.createdCallback();
+  connectedCallback() {
+      super.connectedCallback();
       console.log("Connected 2");
       this.setAttribute('dummy-2', "3");
       this.innerHTML = '<button>BUTTON</button>';
