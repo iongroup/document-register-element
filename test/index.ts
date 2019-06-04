@@ -1,32 +1,26 @@
 
 declare var Reflect: any;
 
-class MyElement extends HTMLElement {
-    constructor() {
+class MyElement1 extends HTMLElement {
+    protected _template: string;
+
+    constructor(instance: any) {
         if (false) super();
-        return Reflect.construct(HTMLElement, [], this.constructor);
+        instance = instance || Reflect.construct(HTMLElement, [], this.constructor);
+        MyElement1.prototype.ctor.call(instance);
+        return instance;
+    }
+
+    protected ctor() {
+      this._template = '<button>BUTTON</button>';
     }
   
     connectedCallback() {
       console.log("Connected");
       this.setAttribute('dummy', "2");
-  }
+      this.innerHTML = this._template;
+    }
 }
 
-class MyElement2 extends MyElement {
-  constructor() {
-    if (false) super();
-    return Reflect.construct(MyElement, [], this.constructor);
-  }
-  
-  connectedCallback() {
-      super.connectedCallback();
-      console.log("Connected 2");
-      this.setAttribute('dummy-2', "3");
-      this.innerHTML = '<button>BUTTON</button>';
-  };
-}
-
-customElements.define('my-el', MyElement);
-customElements.define('my-el2', MyElement2);
+customElements.define('my-el', MyElement1);
   
